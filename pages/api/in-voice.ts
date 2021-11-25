@@ -10,7 +10,7 @@ export default async function handler(
 
   const online = client.guilds.cache.map(({ name, channels }) => {
     let voiceChannels = channels.cache.filter(
-      (channel) => channel.isVoice() && !!channel.members.size
+      (channel) => channel.type == 'voice' && !!channel.members.size
     );
 
     return {

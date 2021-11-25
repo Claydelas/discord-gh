@@ -1,8 +1,8 @@
 import { Client, Intents } from 'discord.js';
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const client = new Client({ ws: { intents: [Intents.FLAGS.GUILDS] } });
 
-let ready = client.isReady();
+let ready = !!client.readyTimestamp;
 
 if (!ready) client.login(process.env.BOT_TOKEN);
 
