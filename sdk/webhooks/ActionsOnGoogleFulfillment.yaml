@@ -1,0 +1,5 @@
+handlers:
+- name: onlineUsers
+httpsEndpoint:
+  baseUrl: https://discord-gh.vercel.app/api/actions/intents
+  endpointApiVersion: 2

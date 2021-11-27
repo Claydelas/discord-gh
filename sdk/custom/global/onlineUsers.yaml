@@ -1,0 +1,3 @@
+handler:
+  webhookHandler: onlineUsers
+transitionToScene: actions.scene.END_CONVERSATION

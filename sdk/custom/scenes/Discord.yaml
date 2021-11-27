@@ -1,0 +1,12 @@
+intentEvents:
+- handler:
+    webhookHandler: onlineUsers
+  intent: onlineUsers
+  transitionToScene: actions.scene.END_CONVERSATION
+onEnter:
+  staticPrompt:
+    candidates:
+    - promptResponse:
+        firstSimple:
+          variants:
+          - speech: Sure, what's up?

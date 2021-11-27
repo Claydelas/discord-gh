@@ -1,0 +1,14 @@
+category: SOCIAL
+defaultLocale: en
+localizedSettings:
+  developerEmail: Claydelas@yahoo.com
+  developerName: Martin Valchev
+  displayName: Discord
+  fullDescription: Allows you to ask for Discord information.
+  pronunciation: Discord
+  sampleInvocations:
+  - Talk to Discord
+  - Ask Discord
+  shortDescription: Discord Integration
+  voice: female_1
+projectId: discord-40a66

@@ -5,7 +5,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "actions-push": "cd sdk && gactions push"
   },
   "dependencies": {
     "@assistant/conversation": "^3.8.1",
