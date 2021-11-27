@@ -1,25 +1,20 @@
-import { actionssdk, SimpleResponse } from 'actions-on-google';
+import { conversation, Simple } from '@assistant/conversation';
 import { getOnlineUsers } from '../in-voice';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-const app = actionssdk({ debug: false });
+const app = conversation({ debug: false });
 
-app.intent('actions.intent.MAIN', async (conv) => {
+app.handle('onlineUsers', async (conv) => {
   const online = (await getOnlineUsers()).flatMap((guild) =>
     guild.active.map((user) => user.user)
   );
-  conv.close(
-    new SimpleResponse({
-      speech: online
-        ? `Online people include: ${online.join(', ')}`
-        : "There aren't any users online right now.",
+  conv.add(
+    new Simple({
+      speech:
+        online.length > 0
+          ? `Online users include: ${online.join(', ')}`
+          : "There aren't any users online right now.",
     })
-  );
-});
-
-app.fallback((conv) => {
-  conv.close(
-    new SimpleResponse({ speech: "I'm not sure I can help with that yet." })
   );
 });
 
@@ -27,11 +22,15 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const out = await app.handler(req.body, req.headers);
-  if (out.headers) {
-    Object.entries(out.headers).forEach(
-      ([header, value]) => value && res.setHeader(header, value)
-    );
+  try {
+    const out = await app.handler(req.body, req.headers);
+    if (out.headers) {
+      Object.entries(out.headers).forEach(
+        ([header, value]) => value && res.setHeader(header, value)
+      );
+    }
+    res.status(out.status).json(out.body);
+  } catch (error) {
+    res.status(500).send(error);
   }
-  res.json(out.body);
 }
