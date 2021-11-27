@@ -2,25 +2,36 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import DiscordClient from '@/utils/discord-client';
 
+export async function getOnlineUsers(verbose: boolean = false) {
+  const client = await DiscordClient();
+
+  return client.guilds.cache.map(({ name, voiceStates }) => {
+    const active = verbose
+      ? voiceStates.cache
+          .filter((vs) => !!vs.channel)
+          .map((vs) => ({
+            user: vs.member,
+            channel: vs.channel,
+            status: vs,
+          }))
+      : voiceStates.cache
+          .filter((vs) => !!vs.channel)
+          .map((vs) => ({
+            user: vs.member?.displayName,
+            channel: vs.channel?.name,
+          }));
+    return {
+      name,
+      active,
+    };
+  });
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const client = await DiscordClient();
-
-  const online = client.guilds.cache.map(({ name, channels }) => {
-    let voiceChannels = channels.cache.filter(
-      (channel) => channel.type == 'voice' && !!channel.members.size
-    );
-
-    return {
-      name,
-      channels: voiceChannels.map((channel) => ({
-        name: channel.name,
-        members: channel.members ?? [], //.map(member => member.user.username),
-      })),
-    };
-  });
+  const online = await getOnlineUsers(!!req.query.verbose);
 
   res.json(online);
 }
